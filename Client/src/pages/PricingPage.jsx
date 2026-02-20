@@ -1,11 +1,11 @@
 import React from "react";
-import PricingCard from "../components/PricingCard"; // adjust path if needed
+import PricingCard from "../components/PricingCard"; 
 
 const PricingPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-[#0B1220] text-white px-4 text-center py-16">
 
-      {/* Heading */}
+      
       <h2 className="text-3xl md:text-5xl font-bold mb-6">
         Start Creating Exam Notes Today
       </h2>
@@ -15,10 +15,10 @@ const PricingPage = () => {
         No setup. No complexity. Just smart learning.
       </p>
 
-      {/* Pricing Cards */}
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
 
-        {/* Starter */}
+        
         <PricingCard
           name="Starter Plan"
           oneLineDes="Perfect for quick exam revision notes"
@@ -33,7 +33,8 @@ const PricingPage = () => {
           ]}
         />
 
-        {/* Pro (Center Purple) */}
+        
+
         <PricingCard
           name="Pro Plan"
           oneLineDes="Best for serious learners"
@@ -49,7 +50,8 @@ const PricingPage = () => {
           ]}
         />
 
-        {/* Premium */}
+        
+        
         <PricingCard
           name="Premium Plan"
           oneLineDes="Ultimate study experience"
