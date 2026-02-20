@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema(
     notes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Note",
+        ref: "Notes",
         default : []
       }
     ]
