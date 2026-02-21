@@ -4,7 +4,7 @@ export const buildPrompt = ({
   examType,
   revisionMode,
   includeDiagram,
-  includeChart
+  includeCharts
 }) => {
   return `
 You are a STRICT JSON generator for an exam preparation system.
@@ -27,7 +27,7 @@ Class Level: ${classLevel || "Not specified"}
 Exam Type: ${examType || "General"}
 Revision Mode: ${revisionMode ? "ON" : "OFF"}
 Include Diagram: ${includeDiagram ? "YES" : "NO"}
-Include Charts: ${includeChart ? "YES" : "NO"}
+Include Charts: ${includeCharts ? "YES" : "NO"}
 
 GLOBAL CONTENT RULES:
 - Use clear, simple, exam-oriented language

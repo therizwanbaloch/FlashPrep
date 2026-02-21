@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { generateNotes } from "../services/api.js"; 
 
 const TopicForm = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +12,8 @@ const TopicForm = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState(null);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({
@@ -23,43 +25,21 @@ const TopicForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.topic || !formData.examType) {
-      alert("Topic and Exam Type are required");
+    
+    if (!formData.topic.trim()) {
+      setError("Topic is required");
       return;
     }
 
+    setError("");
+    setLoading(true);
+
     try {
-      setLoading(true);
-
-      const response = await axios.post(
-        "http://localhost:5000/api/notes/generate",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      const data = response.data;
-
-      if (!data.success) {
-        alert(data.message);
-        return;
-      }
-
-      console.log("Generated Notes:", data);
-      alert("Notes generated successfully!");
-
-    } catch (error) {
-      console.error(error);
-
-      // Better error handling
-      if (error.response) {
-        alert(error.response.data.message);
-      } else {
-        alert("Server not responding");
-      }
+      const response = await generateNotes(formData);
+      console.log(formData)
+      setResult(response);
+    } catch (err) {
+      setError(err.message || "Failed to generate notes");
     } finally {
       setLoading(false);
     }
@@ -75,6 +55,7 @@ const TopicForm = () => {
           Create Exam Notes
         </h2>
 
+        
         <div className="flex flex-col">
           <label className="text-white mb-1">Topic</label>
           <input
@@ -82,10 +63,15 @@ const TopicForm = () => {
             value={formData.topic}
             onChange={(e) => handleChange("topic", e.target.value)}
             className="px-4 py-2 rounded-md bg-[#0B1220] border border-gray-600 text-white"
-            required
           />
         </div>
 
+        
+        {error && (
+          <p className="text-red-500 text-sm">{error}</p>
+        )}
+
+      
         <div className="flex flex-col">
           <label className="text-white mb-1">Class / Grade</label>
           <input
@@ -96,6 +82,7 @@ const TopicForm = () => {
           />
         </div>
 
+        
         <div className="flex flex-col">
           <label className="text-white mb-1">Exam Type</label>
           <input
@@ -103,10 +90,10 @@ const TopicForm = () => {
             value={formData.examType}
             onChange={(e) => handleChange("examType", e.target.value)}
             className="px-4 py-2 rounded-md bg-[#0B1220] border border-gray-600 text-white"
-            required
           />
         </div>
 
+      
         {["revisionMode", "includeDiagram", "includeCharts"].map(
           (field) => (
             <label key={field} className="flex items-center gap-2 text-white">
@@ -121,13 +108,28 @@ const TopicForm = () => {
           )
         )}
 
+    
         <button
           type="submit"
           disabled={loading}
-          className="mt-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-md"
+          className={`mt-4 py-2 text-white font-semibold rounded-md transition ${
+            loading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-sky-500 hover:bg-sky-600"
+          }`}
         >
-          {loading ? "Generating..." : "Generate Notes"}
+          {loading ? "Generating Notes..." : "Generate Notes"}
         </button>
+
+      
+        {result && (
+          <div className="mt-6 bg-[#0B1220] p-4 rounded-md text-white">
+            <h3 className="font-semibold mb-2">Generated Notes:</h3>
+            <pre className="whitespace-pre-wrap text-sm">
+              {JSON.stringify(result, null, 2)}
+            </pre>
+          </div>
+        )}
       </form>
     </div>
   );
